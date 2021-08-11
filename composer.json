@@ -8,5 +8,8 @@
             "email": "laravel@88.com"
         }
     ],
-    "require": {}
+    "require": {
+        "multiavatar/multiavatar-php": "^1.0",
+        "intervention/image": "^2.6"
+    }
 }
