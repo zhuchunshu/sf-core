@@ -1,8 +1,8 @@
 <?php
 
+use JetBrains\PhpStorm\Pure;
 use App\Plugins\Core\src\Lib\Redirect;
 use App\Plugins\Core\src\Lib\UserVerEmail;
-use JetBrains\PhpStorm\Pure;
 
 if(!function_exists("plugins_core_common_theme")){
     function plugins_core_common_theme($default="light"){
@@ -140,5 +140,21 @@ if (!function_exists("core_menu_pdArr")) {
             }
         }
         return $arr;
+    }
+}
+
+if(!function_exists("core_default")){
+    function core_default($string=null,$default=null){
+        if($string){
+            return $string;
+        }
+        return $default;
+    }
+}
+
+if(!function_exists("markdown")){
+    function markdown(): \Parsedown
+    {
+        return new Parsedown();
     }
 }

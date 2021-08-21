@@ -16,8 +16,8 @@
     <script>
         var csrf_token = "{{ recsrf_token() }}";
     </script>
-    <meta name="description" content="{{ get_options('description') }}">
-    <meta name="keywords" content="{{ get_options('keywords') }}">
+    <meta name="description" content="@yield('description',get_options('description'))">
+    <meta name="keywords" content="@yield('keywords',get_options('keywords'))">
     <!-- 自定义CSS -->
     @foreach (\App\CodeFec\Ui\functions::get('css') as $key => $value)
         <link rel="stylesheet" href="{{ $value }}">
@@ -29,16 +29,17 @@
 @include("plugins.Core.layouts.themes.header-".get_options('core_theme_header',1))
 @include("plugins.Core.layouts.errors")
 @include("plugins.Core.layouts._msg")
+@yield('header')
 <div class="page-body">
     <div class="container-xl">
         @yield('content')
     </div>
         @include("plugins.Core.layouts.themes.footer-".get_options('core_theme_footer',1))
     </div>
+    <script src='/js/jquery-3.6.0.min.js'></script>
     <script src="{{ mix('js/vue.js') }}"></script>
     <script src="{{ mix('js/alpine.js') }}"></script>
     <script src="{{ '/tabler/libs/apexcharts/dist/apexcharts.min.js' }}"></script>
-    <!-- Tabler Core -->
     <script src="{{ '/tabler/js/tabler.min.js' }}"></script>
     @if (get_options('theme_common_require_mithril', 'yes') !== 'no')
         <script src="{{ mix('plugins/Core/js/mithril.js') }}"></script>

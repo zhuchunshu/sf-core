@@ -18,14 +18,6 @@ use Psr\Http\Message\ResponseInterface;
 #[Middleware(LoginMiddleware::class)]
 class IndexController
 {
-    /**
-     * @throws Exception
-     */
-    #[GetMapping(path: "/test")]
-    public function test()
-    {
-        return request()->fullUrl();
-    }
 
     /**
      * 强制验证邮箱
@@ -61,5 +53,13 @@ class IndexController
         ]);
         session()->set("auth_data",User::query()->where("id",session()->get('auth'))->first());
         return redirect()->url("/")->with("success","验证通过!")->go();
+    }
+
+    /**
+     * 个人中心
+     */
+    #[GetMapping(path: "/user")]
+    public function user(){
+        return redirect()->url('/users/'.auth()->data()->username.".html")->go();
     }
 }
