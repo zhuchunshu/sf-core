@@ -13,19 +13,13 @@ use Hyperf\HttpServer\Annotation\GetMapping;
  */
 class TestController
 {
-    /**
-     * @GetMapping(path="/")
-     */
-    public function index(){
-        return view("plugins.Core.test");
-    }
 
     #[GetMapping(path: "/test")]
-    public function test(): \Psr\Http\Message\ResponseInterface
+    public function test()
     {
-        ShortCodeR()->add("a","App\Plugins\Core\src\Lib\ShortCode\Defaults@a");
+        //ShortCodeR()->add("a","App\Plugins\Core\src\Lib\ShortCode\Defaults@a");
         ShortCode()->add("a","App\Plugins\Core\src\Lib\ShortCode\Defaults@a");
-        $content = '[a=(color:black)]';
-        return response()->raw(ShortCode()->make("type4",$content));
+        $content = 'a @Inkedus @Inkedus @Nb a';
+        return replace_all_at($content);
     }
 }
