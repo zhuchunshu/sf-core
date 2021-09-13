@@ -16,6 +16,7 @@ class TestController
     #[GetMapping(path: "/test")]
     public function test()
     {
-        return session()->get('auth_data_class');
+
+        return session()->get("auth_data_class");
     }
 }
