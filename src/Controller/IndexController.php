@@ -14,29 +14,73 @@ class IndexController
     #[GetMapping(path:"/")]
     public function index(): \Psr\Http\Message\ResponseInterface
     {
-        $page = Topic::query()
-            ->with("tag","user")
-            ->orderBy("id","desc")
-            ->paginate(get_options("topic_home_num",15));
+        $title = null;
+        $_page = request()->input('page',1);
+        if(!cache()->has("core.index.page.".$_page) || cache()->get("topic.count")!==Topic::query()->where("status",'publish')->count()){
+            $page = Topic::query()
+                ->where("status",'publish')
+                ->with("tag","user")
+                ->orderBy("topping","desc")
+                ->orderBy("id","desc")
+                ->paginate(get_options("topic_home_num",15));
+            cache()->set("core.index.page.".$_page,$page,600);
+            cache()->set("topic.count",Topic::query()->where("status",'publish')->count());
+        }else{
+            $page = cache()->get("core.index.page.".$_page);
+        }
         if(request()->input("query")==="hot"){
             $page = Topic::query()
+                ->where("status",'publish')
                 ->with("tag","user")
                 ->orderBy("view","desc")
+                ->orderBy("id","desc")
                 ->paginate(get_options("topic_home_num",15));
+            $title = "热度最高的帖子";
         }
         if(request()->input("query")==="likes"){
             $page = Topic::query()
+                ->where("status",'publish')
                 ->with("tag","user")
                 ->orderBy("like","desc")
+                ->orderBy("id","desc")
                 ->paginate(get_options("topic_home_num",15));
+            $title = "点赞最多的帖子";
         }
         if(request()->input("query")==="updated_at"){
             $page = Topic::query()
+                ->where("status",'publish')
                 ->with("tag","user")
                 ->orderBy("updated_at","desc")
                 ->paginate(get_options("topic_home_num",15));
+            $title = "最后更新";
+        }
+        if(request()->input("query")==="essence"){
+            $page = Topic::query()
+                ->where([["essence",">",0],["status",'publish']])
+                ->with("tag","user")
+                ->orderBy("updated_at","desc")
+                ->paginate(get_options("topic_home_num",15));
+            $title = "最后更新";
+        }
+        if(request()->input("query")==="topping"){
+            $page = Topic::query()
+                ->where([["topping",">",0],["status",'publish']])
+                ->with("tag","user")
+                ->orderBy("updated_at","desc")
+                ->paginate(get_options("topic_home_num",15));
+            $title = "最后更新";
         }
         $topic_menu = [
+            [
+                "name" => "置顶帖子",
+                "url"=> "/?".core_http_build_query(['query'=>'topping'],['page' => request()->input('page' , 1)]),
+                "parameter" => "query=topping"
+            ],
+            [
+                "name" => "精华帖子",
+                "url"=> "/?".core_http_build_query(['query'=>'essence'],['page' => request()->input('page' , 1)]),
+                "parameter" => "query=essence"
+            ],
             [
                 "name" => "热度最高",
                 "url"=> "/?".core_http_build_query(['query'=>'hot'],['page' => request()->input('page' , 1)]),
@@ -53,15 +97,27 @@ class IndexController
                 "parameter" => "query=updated_at"
             ],
         ];
-        return view("plugins.Core.index",["page" => $page,"topic_menu"=>$topic_menu]);
+        return view("plugins.Core.index",["page" => $page,"topic_menu"=>$topic_menu,'title'=>$title]);
     }
 
     #[GetMapping(path:"/{id}.html")]
     public function show($id){
-        if(!Topic::query()->where('id',$id)->exists()) {
+        if(!Topic::query()->where([['id',$id],['status','publish']])->exists()) {
             return admin_abort("页面不存在",404);
         }
         return (new ShowTopic())->handle($id);
+    }
+
+    #[GetMapping(path:"/{id}.md")]
+    public function show_md($id){
+        if(!Topic::query()->where([['id',$id],['status','publish']])->exists()) {
+            return admin_abort("页面不存在",404);
+        }
+        $data = Topic::query()
+            ->where([['id', $id],['status','publish']])
+            ->select("markdown")
+            ->first();
+        return response()->raw($data->markdown);
     }
 
 }

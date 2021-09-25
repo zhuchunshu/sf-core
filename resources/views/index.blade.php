@@ -1,6 +1,8 @@
 @extends("plugins.Core.app")
 
-@section('title',"首页")
+@if($title)
+    @section('title',$title." - ")
+@endif
 
 
 @section('content')
@@ -28,5 +30,6 @@
     <link rel="stylesheet" href="{{ mix('plugins/Topic/css/app.css') }}">
 @endsection
 @section('scripts')
+    <script src="/tabler/libs/apexcharts/dist/apexcharts.min.js"></script>
     <script src="{{mix('plugins/Topic/js/core.js')}}"></script>
 @endsection

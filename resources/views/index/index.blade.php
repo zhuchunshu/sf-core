@@ -1,5 +1,5 @@
 <div class="row row-cards justify-content-center">
-    <div class="col-md-12">
+    <div class="col-md-12" style="margin-bottom:-20px">
         <div class="card-tabs border-0">
             <!-- Cards navigation -->
             <ul class="nav nav-tabs">
@@ -32,12 +32,27 @@
                                     <a href="/users/{{$data->user->username}}.html" style="margin-bottom:0;text-decoration:none;" class="card-title text-reset">{{$data->user->username}}</a>
                                     <div style="margin-top:1px">发布于:{{$data->created_at}}</div>
                                 </div>
+                                <div class="col-auto">
+                                    @if($data->essence>0)
+                                        <div class="ribbon bg-green text-h3">
+                                            精华
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="row">
                                 <div class="col-md-12 markdown home-article">
-                                    <a href="/{{$data->id}}.html" class="text-reset"><h2>{{$data->title}}</h2></a>
+                                    <a href="/{{$data->id}}.html" class="text-reset">
+                                        <h2>
+                                            @if($data->topping>0)
+                                                <span class="text-red">
+                                                    置顶
+                                                </span>
+                                            @endif
+                                                {{$data->title}}</h2>
+                                    </a>
                                     <span class="home-summary">{{\Hyperf\Utils\Str::limit(core_default(deOptions($data->options)["summary"],"未捕获到本文摘要"),300)}}</span>
                                     <div class="row">
                                         @foreach(deOptions($data->options)["images"] as $key=>$image)
@@ -80,7 +95,7 @@
             </div>
         @endforeach
     @else
-        <div class="col-md-10">
+        <div class="col-md-12">
             <div class="border-0 card card-body">
                 <div class="text-center card-title">暂无内容</div>
             </div>
