@@ -22,7 +22,7 @@ class UserController
     public function login(): \Psr\Http\Message\ResponseInterface
     {
 
-        return view("plugins.Core.user.sign",['title' => "登陆","view" => "plugins.Core.user.login"]);
+        return view("Core::user.sign",['title' => "登陆","view" => "Core::user.login"]);
     }
 
     #[GetMapping(path:"/register")]
@@ -31,7 +31,7 @@ class UserController
         if(get_options("core_user_reg_switch","开启")==="关闭"){
             return admin_abort("注册功能已关闭",403);
         }
-        return view("plugins.Core.user.sign",['title' => "注册","view" => "plugins.Core.user.register"]);
+        return view("Core::user.sign",['title' => "注册","view" => "Core::user.register"]);
     }
 
     #[PostMapping(path: "/register")]
@@ -56,7 +56,7 @@ class UserController
             "username" => $data['username'],
             "email" => $data['email'],
             "password" => Hash::make($data['password']),
-            "class_id" => get_options("plugins_core_user_reg_defuc",1),
+            "class_id" => get_options("core_user_reg_defuc",1),
             "_token" => Str::random(),
             "options_id" => $userOption->id
         ]);

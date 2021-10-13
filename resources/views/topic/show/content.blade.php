@@ -21,7 +21,7 @@
                         </h1>
                     </div>
                     <div class="col-md-12">
-                        @include('plugins.Core.topic.show.ol')
+                        @include('Core::topic.show.ol')
                     </div>
                     <hr class="hr-text" style="margin-top: 5px;margin-bottom: 5px">
                     <div class="col-md-12" id="author">
@@ -49,8 +49,8 @@
             <div class="card-footer" style="background-color: #f4f6fa;">
                 {{-- 点赞 --}}
                 <a style="text-decoration:none;" core-click="like-topic" topic-id="{{ $data->id }}"
-                    class="cursor-pointer text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="点赞">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                    class="hvr-icon-bounce cursor-pointer text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="点赞">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="hvr-icon icon" width="24" height="24"
                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
                         stroke-linejoin="round">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -60,9 +60,9 @@
                 </a>
                 {{-- markdown --}}
                 <a data-bs-toggle="tooltip" data-bs-placement="top" title="" href="/{{ $data->id }}.md"
-                    data-bs-original-title="查看markdown文本">
+                    data-bs-original-title="查看markdown文本" class="hvr-icon-grow-rotate">
                     <span class="switch-icon-a text-muted">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-markdown" width="24"
+                        <svg xmlns="http://www.w3.org/2000/svg" class="hvr-icon icon icon-tabler icon-tabler-markdown" width="24"
                             height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
                             stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -79,8 +79,13 @@
     </div>
 
 {{--    上下页--}}
-    @include('plugins.Core.topic.show.include.lfpage')
+    @include('Core::topic.show.include.lfpage')
+{{--    显示评论--}}
+    @include('Comment::Widget.show-topic')
+{{--    评论--}}
+    @include('Comment::Widget.topic')
 
 
 
 </div>
+
