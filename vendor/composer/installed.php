@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '1c3b77f57a6ad79620e9206b6a839c597c2af886',
+    'reference' => '18fde0b3e33164041a216b3c930d22f00683975e',
     'name' => 'zhuchunshu/sf-core',
   ),
   'versions' => 
@@ -106,6 +106,15 @@
       ),
       'reference' => '120b605dfeb996808c31b6477290a714d356e822',
     ),
+    'xemlock/htmlpurifier-html5' => 
+    array (
+      'pretty_version' => 'v0.1.11',
+      'version' => '0.1.11.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'f0d563f9fd4a82a3d759043483f9a94c0d8c2255',
+    ),
     'zhuchunshu/sf-core' => 
     array (
       'pretty_version' => 'dev-master',
@@ -113,7 +122,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '1c3b77f57a6ad79620e9206b6a839c597c2af886',
+      'reference' => '18fde0b3e33164041a216b3c930d22f00683975e',
     ),
   ),
 );
