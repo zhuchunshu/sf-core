@@ -11,6 +11,7 @@ use Hyperf\Contract\OnOpenInterface;
 use Hyperf\WebSocketServer\Context;
 use Swoole\Http\Request;
 use Swoole\Server;
+use Swoole\Timer;
 use Swoole\Websocket\Frame;
 use Swoole\WebSocket\Server as WebSocketServer;
 
@@ -19,13 +20,13 @@ class CoreController implements OnMessageInterface, OnOpenInterface, OnCloseInte
     public function onMessage($server, Frame $frame): void
     {
         $token = Context::get('login-token');
-        if($token && UsersAuth::query()->where("token",$token)->exists()){
-            $server->push($frame->fd, json_encode([
-                "user" => [
-                    "online" => redis()->sMembers("user_online")
-                ]
-            ]));
-        }
+//        if($token && UsersAuth::query()->where("token",$token)->exists()){
+//            $server->push($frame->fd, json_encode([
+//                "user" => [
+//                    "online" => redis()->sMembers("user_online")
+//                ]
+//            ]));
+//        }
 
     }
 
@@ -52,10 +53,23 @@ class CoreController implements OnMessageInterface, OnOpenInterface, OnCloseInte
             redis()->set("user_online_".$user_id,$request->fd);
             redis()->sAdd("user_online",$user_id);
         }
-//        $server->push($request->fd, core_json([
-//            "msg" => "你还有" . $notice . "条未读通知!",
-//            "type" => "success",
-//            "position" => "topRight"
-//        ]));
+
+        if($token && UsersAuth::query()->where("token",$token)->exists()){
+            swoole_timer_tick(400, static function()use ($server,$request){
+                foreach ($server->connections  as $fd){
+                    if($server->isEstablished($fd)){
+                        $server->push($fd, json_encode([
+                            "user" => [
+                                "online" => redis()->sMembers("user_online"),
+                                "online_count" => count(redis()->sMembers("user_online")),
+                            ],
+                            "client" => [
+                                "online" => count($server->connections),
+                            ]
+                        ]));
+                    }
+                }
+            });
+        }
     }
 }
