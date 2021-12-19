@@ -54,7 +54,10 @@ class CoreController implements OnMessageInterface, OnOpenInterface, OnCloseInte
             redis()->sAdd("user_online",$user_id);
         }
 
+
+
         if($token && UsersAuth::query()->where("token",$token)->exists()){
+            // 当前在线
             swoole_timer_tick(400, static function()use ($server,$request){
                 foreach ($server->connections  as $fd){
                     if($server->isEstablished($fd)){
@@ -64,7 +67,7 @@ class CoreController implements OnMessageInterface, OnOpenInterface, OnCloseInte
                                 "online_count" => count(redis()->sMembers("user_online")),
                             ],
                             "client" => [
-                                "online" => count($server->connections),
+
                             ]
                         ]));
                     }
